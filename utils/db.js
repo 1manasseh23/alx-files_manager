@@ -15,24 +15,44 @@ class DBClient {
             useUnifiedTopology: true,
         });
 
-        this.client.connect().then(() => {
-            this.db = this.client.db(database);
-        }).catch((err) => {
-            console.error('Error connecting to MongoDB:', err);
-            this.db = null;
-        });
+        this.client.connect()
+            .then(() => {
+                this.db = this.client.db(database);
+                console.log('Connected to MongoDB');
+            })
+            .catch((err) => {
+                console.error('Error connecting to MongoDB:', err);
+                this.db = null;
+            });
     }
 
-    isAlive() {
-        return this.client.isConnected();
+    async isAlive() {
+        try {
+            // Check the connection to MongoDB
+            await this.client.db().admin().ping();
+            return true;
+        } catch (err) {
+            console.error('MongoDB connection error:', err);
+            return false;
+        }
     }
 
     async nbUsers() {
-        return this.db ? await this.db.collection('users').countDocuments() : 0;
+        try {
+            return this.db ? await this.db.collection('users').countDocuments() : 0;
+        } catch (err) {
+            console.error('Error counting users:', err);
+            return 0;
+        }
     }
 
     async nbFiles() {
-        return this.db ? await this.db.collection('files').countDocuments() : 0;
+        try {
+            return this.db ? await this.db.collection('files').countDocuments() : 0;
+        } catch (err) {
+            console.error('Error counting files:', err);
+            return 0;
+        }
     }
 }
 
