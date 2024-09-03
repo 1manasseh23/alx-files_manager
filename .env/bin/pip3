@@ -1,4 +1,4 @@
-#!/home/exceptionx/alx-files_manager/.env/bin/python3
+#!/home/uwen_godwin/alx-files_manager/.env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
